@@ -1,5 +1,6 @@
 import Input from "../../components/input";
 import { Body, Button, Container, FormLogin, Header } from "./styles";
+import { Link } from "react-router-dom";
 
 function Register() {
   return (
@@ -16,7 +17,7 @@ function Register() {
           <Input id="password" label="Senha" type="password" />
           <Input id="valid-Password" label="Confirmar senha" type="password" />
           <Button>Entrar</Button>
-          <a href="a">Ou se já tem cadastro clique para entrar</a>
+          <Link to="/">Ou se já tem cadastro clique para entrar</Link>
         </Body>
       </FormLogin>
     </Container>
