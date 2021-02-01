@@ -1,0 +1,29 @@
+[33mcommit e79bb07189811dd9042d75a7e8f0f72324aec98c[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: CaioM4rcolino <20185439@CFP127ALUNO.LOCAL>
+Date:   Mon Feb 1 15:40:33 2021 -0300
+
+    Continuação do layout e routerização
+
+[33mcommit 142b671ca80e606aa526bd973e6d05c1cc4e3d31[m
+Author: yukikuroshiro <gabrielmochiute133@gmail.com>
+Date:   Mon Feb 1 13:29:48 2021 -0300
+
+    Feed
+
+[33mcommit 60dbd54a1012fa77df0b12aabd05b9c8f359e6f9[m
+Author: yukikuroshiro <gabrielmochiute133@gmail.com>
+Date:   Fri Jan 29 16:59:11 2021 -0300
+
+    Construindo o layout
+
+[33mcommit 30e53ddc647ba0ae9d96ba7efd7def9a3538c4fe[m
+Author: yukikuroshiro <gabrielmochiute133@gmail.com>
+Date:   Wed Jan 27 17:00:32 2021 -0300
+
+    Primeira versão
+
+[33mcommit 53404d36768975531a5c7146b0a505caf35d8460[m
+Author: yukikuroshiro <gabrielmochiute133@gmail.com>
+Date:   Wed Jan 27 16:06:57 2021 -0300
+
+    Initialize project using Create React App
