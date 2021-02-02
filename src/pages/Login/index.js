@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import {api} from "../../services/api"
 import { useState } from "react";
+import { signIn } from "../../services/security";
 
 function Login() {
 
@@ -21,7 +22,8 @@ function Login() {
 
       const response = await api.post("/sessions", login)
 
-      console.log(response.data);
+      signIn(response.data)
+
       history.push("/home");
 
       

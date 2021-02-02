@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
+
 import {
   ActionsContainer,
   Container,
@@ -12,6 +15,8 @@ import {
 
 import imgProfile from "../../assets/foto_perfil.png";
 import senaiLogo from  "../../assets/logo.png";
+import { signOut } from "../../services/security";
+import { useHistory } from "react-router-dom";
 
 function Profile() {
   return (
@@ -36,82 +41,81 @@ function Profile() {
   );
 }
 
+function Question({question}){
+    return(
+      <QuestionCard>
+      <header>
+        <img src={imgProfile} alt=""/>
+        <strong>por {question.Student.name}</strong>
+        <p>em {question.created_at}</p>
+      </header>
+      <section>
+    <strong>{question.title}</strong>
+    <p>{question.description}</p>
+        <img src="https://csharpcorner.azureedge.net/UploadFile/BlogImages/02162017013948AM/1.png" alt=""/>
+      </section>
+      <footer>
+      
+        <h1>34 Respostas</h1>
+       
+        <section>
+          <header>
+            <img src={imgProfile} alt=""/>
+            <strong>por </strong>
+            <p>12/12/2012 as 12:12</p>
+          </header>
+          <p>Classes estáticas não precisam ser instanciadas. Basta usar os métodos direto.</p>
+        </section>
+        <form>
+          <textarea
+            placeholder="Responda essa dúvida!"
+            required
+          ></textarea>
+          <button>Enviar</button>
+        </form>
+      </footer>
+    </QuestionCard>
+    );
+}
+
 function Home() {
+
+  const history = useHistory();
+
+  const [questions, setQuestions] = useState([])
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+
+      const response = await api.get("/feed")
+      setQuestions(response.data);
+
+    }
+
+    loadQuestions();
+
+  }, [])
+
+  const handleSignOut = () =>{
+
+    signOut();
+    history.replace("/")
+  }
+
   return (
     <Container>
       <Header>
       <Logo src={senaiLogo}/>
-      <IconSignOut />
+       <IconSignOut onClick={handleSignOut}/>
       </Header>
       <Content>
         <ProfileContainer>
           <Profile />
         </ProfileContainer>
         <FeedContainer>
-          <QuestionCard>
-            <header>
-              <img src={imgProfile} alt=""/>
-              <strong>por Ciclano da Silva</strong>
-              <p>em 12/12/2012 as 12:12</p>
-            </header>
-            <section>
-              <strong>Problema com arrays em C#</strong>
-              <p>Problema ao declarar valor para índice de array em C#</p>
-              <img src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/120432931/original/0441cd8709f320e21fad391cab0cdb788a530717/solve-your-programming-problems.png" alt=""/>
-            </section>
-            <footer>
-            
-              <h1>11 Respostas</h1>
-             
-              <section>
-                <header>
-                  <img src={imgProfile} alt=""/>
-                  <strong>por Fulano</strong>
-                  <p>12/12/2012 as 12:12</p>
-                </header>
-                <p>Seu índice 1 não é do mesmo tipo que o dado que você quer atribuir</p>
-              </section>
-              <form>
-                <textarea
-                  placeholder="Responda essa dúvida!"
-                  required
-                ></textarea>
-                <button>Enviar</button>
-              </form>
-            </footer>
-          </QuestionCard>
-          <QuestionCard>
-            <header>
-              <img src={imgProfile} alt=""/>
-              <strong>por Ciclano da Silva</strong>
-              <p>em 12/12/2012 as 12:12</p>
-            </header>
-            <section>
-              <strong>Titulo</strong>
-              <p>Descrição</p>
-              <img src="https://csharpcorner.azureedge.net/UploadFile/BlogImages/02162017013948AM/1.png" alt=""/>
-            </section>
-            <footer>
-            
-              <h1>34 Respostas</h1>
-             
-              <section>
-                <header>
-                  <img src={imgProfile} alt=""/>
-                  <strong>por Fulano</strong>
-                  <p>12/12/2012 as 12:12</p>
-                </header>
-                <p>Resposta para a pergunta.</p>
-              </section>
-              <form>
-                <textarea
-                  placeholder="Responda essa dúvida!"
-                  required
-                ></textarea>
-                <button>Enviar</button>
-              </form>
-            </footer>
-          </QuestionCard>
+          {questions.map((q) => <Question question={q}/>)}
+        
+         
         </FeedContainer>
         <ActionsContainer>
           <button>Fazer uma pergunta</button>

@@ -90,4 +90,8 @@ export const Body = styled.section`
 export const Button = styled.button`
   width: 100%;
   margin-top: 10px;
+
+    :disabled{
+      background-color: transparent;
+    }
 `;
