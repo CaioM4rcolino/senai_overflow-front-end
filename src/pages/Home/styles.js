@@ -134,7 +134,7 @@ export const QuestionCard = styled.article`
 
   > footer {
     margin-top: 10px;
-
+    
    
     > h1 {
         font-weight: bold;

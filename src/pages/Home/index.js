@@ -15,10 +15,12 @@ import {
 
 import imgProfile from "../../assets/foto_perfil.png";
 import senaiLogo from  "../../assets/logo.png";
-import { signOut } from "../../services/security";
+import { signOut, getUser } from "../../services/security";
 import { useHistory } from "react-router-dom";
 
+
 function Profile() {
+
   return (
     <>
       <section>
@@ -27,7 +29,7 @@ function Profile() {
       </section>
       <section>
         <strong>NOME:</strong>
-        <p>Fulano de Tal</p>
+        <p>Fulano de tal</p>
       </section>
       <section>
         <strong>RA:</strong>
@@ -42,40 +44,111 @@ function Profile() {
 }
 
 function Question({question}){
+
+
+  const [newAnswer, setNewAnswer] = useState();
+  const [display, setDisplay] = useState(false);
+  const [answers, setAnswers] = useState(question.Answers);
+
+  const quantityAnswers = answers.length;
+
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      try {
+
+        const response = await api.post(`/questions/${question.id}/answers`, {description: JSON.stringify(newAnswer)})
+
+        const student = getUser();
+
+        const addedAnswer = {
+          id: response.data.id,
+          description: newAnswer,
+          created_at: response.data.createdAt,
+          Student: {
+            id: student.studentId,
+            name: student.name
+          },
+
+        }
+
+        setAnswers([...answers, addedAnswer]);
+        
+        setNewAnswer("");
+
+        
+      } catch (error) {
+        console.error(error);
+        alert(error.response.data.error);
+      }
+
+    }
+
     return(
       <QuestionCard>
       <header>
         <img src={imgProfile} alt=""/>
         <strong>por {question.Student.name}</strong>
-        <p>em {question.created_at}</p>
+        <p>em {question.createdAt}</p>
       </header>
       <section>
     <strong>{question.title}</strong>
     <p>{question.description}</p>
-        <img src="https://csharpcorner.azureedge.net/UploadFile/BlogImages/02162017013948AM/1.png" alt=""/>
+        <img src={question.photo} alt=""/>
       </section>
       <footer>
       
-        <h1>34 Respostas</h1>
+        <h1 onClick={() => setDisplay(!display)}>
+          
+          {quantityAnswers === 0 ? (
+            "Seja o Primeiro a responder"
+          ) : (
+            <>
+            {quantityAnswers}
+            {quantityAnswers > 1 ? " Respostas" : " Resposta"}
+            </>
+          )}
+        
+        
+        </h1>
        
-        <section>
-          <header>
-            <img src={imgProfile} alt=""/>
-            <strong>por </strong>
-            <p>12/12/2012 as 12:12</p>
-          </header>
-          <p>Classes estáticas não precisam ser instanciadas. Basta usar os métodos direto.</p>
-        </section>
-        <form>
+        {display && (
+        <> 
+
+        {answers.map((a) => <Answer answer={a}/>)}
+
+        </>
+        )}
+        
+
+       
+        <form onSubmit={handleSubmit}>
           <textarea
             placeholder="Responda essa dúvida!"
             required
+            onChange={(e) => setNewAnswer(e.target.value)}
           ></textarea>
-          <button>Enviar</button>
+          <button type="submit">Enviar</button>
         </form>
       </footer>
     </QuestionCard>
     );
+}
+
+function Answer({answer}){
+
+  return(
+
+    <section>
+      <header>
+        <img src={imgProfile} alt=""/>
+        <strong>por {answer.Student.name}</strong>
+      <p>{answer.Student.createdAt}</p>
+      </header>
+       <p>{answer.description}</p>
+    </section>
+  );
 }
 
 function Home() {
@@ -83,6 +156,9 @@ function Home() {
   const history = useHistory();
 
   const [questions, setQuestions] = useState([])
+  
+
+  // const [answers, setAnswers] = useState([])
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -95,6 +171,9 @@ function Home() {
     loadQuestions();
 
   }, [])
+
+
+
 
   const handleSignOut = () =>{
 
@@ -114,7 +193,6 @@ function Home() {
         </ProfileContainer>
         <FeedContainer>
           {questions.map((q) => <Question question={q}/>)}
-        
          
         </FeedContainer>
         <ActionsContainer>
