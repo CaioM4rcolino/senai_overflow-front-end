@@ -10,6 +10,7 @@ export const Container = styled.div`
     padding-left: 10px;
     border-radius: 3px;
     font-family: sans-serif;
+    
   }
 
   > label {

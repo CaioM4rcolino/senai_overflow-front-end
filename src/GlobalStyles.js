@@ -70,10 +70,10 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  textarea{
-    font-size: 10px;
+  textarea, select{
+    font-size: 15px;
     padding: 5px;
-    font-weight: bold;
+    border-radius: 4px;
     resize: none;
   }
 `;
