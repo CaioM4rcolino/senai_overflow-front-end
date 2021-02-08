@@ -5,7 +5,7 @@ export const Chip = styled.div`
     width: fit-content;
     height: auto;
     margin: 0px 10px 10px 0px;
-    cursor: pointer;
+    cursor: default;
 
     font-size: 12px;
     white-space: nowrap;
@@ -23,8 +23,11 @@ export const Chip = styled.div`
             font-weight: bold;
             transition: .2s;
 
+
             :hover{
                 color: var(--primary);
+                cursor: pointer;
+
             }
         }
     

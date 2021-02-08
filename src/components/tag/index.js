@@ -1,10 +1,10 @@
 import { Chip } from "./style";
 
-function Tag({value}){
+function Tag({value, handleClose}){
     return(
          <Chip>
             {value}
-            <span>&times;</span>
+            <span onClick={handleClose}>&times;</span>
         </Chip>
     );
 }

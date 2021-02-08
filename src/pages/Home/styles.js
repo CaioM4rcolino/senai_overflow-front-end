@@ -212,4 +212,11 @@ export const FormNewQuestion = styled.form`
       flex-wrap: wrap;
     }
 
+    >img{
+      
+      align-self: center;
+      max-width: 60%;
+      
+    }
+
 `;

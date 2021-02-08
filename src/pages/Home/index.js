@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../../services/api";
 import {format} from "date-fns";
 
@@ -55,7 +55,13 @@ function Question({question}){
 
   const [newAnswer, setNewAnswer] = useState();
   const [display, setDisplay] = useState(false);
-  const [answers, setAnswers] = useState(question.Answers);
+  const [answers, setAnswers] = useState([]);
+
+  useEffect(() => {
+
+    setAnswers(question.Answers)
+
+  }, [question.Answers])
 
   const student = getUser()
 
@@ -165,9 +171,22 @@ function Answer({answer}){
   );
 }
 
-function NewQuestion(){
+function NewQuestion({handleReload}){
 
   const [categories, setCategories] = useState([]);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const [image, setImage] = useState(null);
+
+  const categoriesRef = useRef();
+
+  const [newQuestion, setNewQuestion] = useState({
+    title: "",
+    description: "",
+    gist: "",
+  });
+
 
   useEffect(() => {
 
@@ -189,28 +208,121 @@ function NewQuestion(){
 
   }, [])
 
+  const handleCategories = (e) => {
+
+    const idCategory = e.target.value;
+    
+    const categoryValue = categories.find((c) => c.id.toString() === idCategory)
+
+    if(categoryValue && !selectedCategories.includes(categoryValue))
+      setSelectedCategories([...selectedCategories, categoryValue]);
+
+    e.target[e.target.selectedIndex].disabled = true;
+    e.target.value = "";
+
+  };
+
+  const handleRemoveTag = (categoryId) => {
+
+    setSelectedCategories(selectedCategories.filter((c) => c.id !== categoryId))
+
+    const options = categoriesRef.current;
+
+    for(var i = 0; i < options.length; i++){
+      if(options[i].value === categoryId.toString()){
+          options[i].disabled = false;
+      }
+    }
+    
+
+  }
+
+  const handleImage = (e) => {
+
+    setImage(e.target.files[0]);
+
+  }
+
+  const handleAddNewQuestion = async (e) => {
+    e.preventDefault();
+
+      const data = new FormData();
+
+      data.append("title", newQuestion.title)
+      data.append("description", newQuestion.description)
+
+      
+
+      const categories = selectedCategories.reduce((string, category) => (string += category.id + ","), "")
+
+      data.append("categories", categories.substr(0, categories.length - 1))
+
+      if(newQuestion.gist)
+       data.append("gist", newQuestion.gist)
+
+      if(image) 
+        data.append("photo", image)
+
+      try {
+        
+        await api.post("/questions", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        handleReload()
+
+      } catch (error) {
+        alert(error)
+        console.error(error);
+      }
+
+  }
+
+  const handleInput = (e) => {
+
+    setNewQuestion({...newQuestion, [e.target.id]: e.target.value})
+   
+  }
+
+
   return( 
-    <FormNewQuestion>
-      <Input id="title" label="Título"/>
-      <Input id="description" label="Descrição"/>
-      <Input id="gist" label="Gist"/>
-      <Select id="categories" label="Categorias">
-        <option value="">
-          Selecione
-        </option>
+    <FormNewQuestion onSubmit={handleAddNewQuestion}>
+      <Input id="title" label="Título" value={newQuestion.title} handler={handleInput} required/>
+      <Input id="description" label="Descrição" value={newQuestion.description} handler={handleInput} required/>
+      <Input id="gist" label="Gist" value={newQuestion.gist} handler={handleInput}/>
+      <Select 
+      id="categories" 
+      label="Categorias" 
+      handler={handleCategories} 
+      ref={categoriesRef}>
+
+        <option value="">Selecione uma categoria</option>
         {categories.map((c) => (
-          <option value={c.id}>{c.description}</option>
+          <option key={c.id} value={c.id}>{c.description}</option>
         ))}
+
       </Select>
       <div>
-      <Tag value="Back-end"/>
-      <Tag value="Front-end"/>
-      <Tag value="Arquitetura de softwares"/>
-      <Tag value="Testes de unidade"/>
-      <Tag value="Hardware"/>
+        
+      {selectedCategories.map((c) => (
+            <Tag handleClose={() => handleRemoveTag(c.id)} value={c.description}/>
+        ))}
+     
 
       </div>
-      <input type="file"/>
+      <input type="file" onChange={handleImage}/>
+
+      {
+        image && (
+          <img 
+          src={image ? URL.createObjectURL(image) : ""} 
+          alt="preview" 
+          />
+        )
+      }
+  
       <button>Enviar</button>
    </FormNewQuestion>
   );
@@ -222,7 +334,9 @@ function Home() {
 
   const [questions, setQuestions] = useState([])
 
-  // const [reload, setReload] = useState(null)
+  const [showModal, setShowModal] = useState(false);
+
+  const [reload, setReload] = useState(null)
   
 
   // const [answers, setAnswers] = useState([])
@@ -237,10 +351,7 @@ function Home() {
 
     loadQuestions();
 
-  }, [])
-
-
-
+  }, [reload])
 
   const handleSignOut = () =>{
 
@@ -248,18 +359,22 @@ function Home() {
     history.replace("/")
   }
 
-  // const handleReload = () => {
-  //   setReload(Math.random())
-  // }
+  const handleReload = () => {
+    setShowModal(false)
+    setReload(Math.random())
+  }
 
   return (
   <>
-    <Modal title="Faça uma pergunta">
-      <NewQuestion/>
-    </Modal>
+    {showModal && (
+       <Modal handleClose={() => setShowModal(false)} title="Faça uma pergunta">
+          <NewQuestion handleReload={handleReload}/>
+       </Modal>
+    )}
+   
     <Container>
       <Header>
-      {<Logo /* onClick={handleReload} */ src={senaiLogo}/>}
+      {<Logo onClick={handleReload} src={senaiLogo}/>}
        <IconSignOut onClick={handleSignOut}/>
       </Header>
       <Content>
@@ -271,7 +386,7 @@ function Home() {
          
         </FeedContainer>
         <ActionsContainer>
-          <button>Fazer uma pergunta</button>
+          <button onClick={() => setShowModal(true)}>Fazer uma pergunta</button>
         </ActionsContainer>
       </Content>
     </Container>

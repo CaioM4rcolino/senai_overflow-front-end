@@ -11,7 +11,6 @@ export const Overlay = styled.div`
     justify-content: center;
     align-items: center;
 
-
 `;
 
 export const ModalContainer = styled.div`
