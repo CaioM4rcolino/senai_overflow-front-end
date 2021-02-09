@@ -23,9 +23,12 @@ import Modal from "../../components/modal";
 import Input from "../../components/input";
 import Select from "../../components/select";
 import Tag from "../../components/tag";
+import Loading from "../../components/loading";
+
 
 
 function Profile() {
+
   const student = getUser()
 
   return (
@@ -50,12 +53,13 @@ function Profile() {
   );
 }
 
-function Question({question}){
+function Question({question, setLoading}){
 
 
   const [newAnswer, setNewAnswer] = useState();
   const [display, setDisplay] = useState(false);
   const [answers, setAnswers] = useState([]);
+
 
   useEffect(() => {
 
@@ -73,7 +77,9 @@ function Question({question}){
 
       try {
 
+        setLoading(true)
         const response = await api.post(`/questions/${question.id}/answers`, {description: JSON.stringify(newAnswer)})
+        setLoading(false)
 
         const student = getUser();
 
@@ -95,7 +101,9 @@ function Question({question}){
         
       } catch (error) {
         console.error(error);
-        alert(error.response.data.error);
+        alert(error);
+        setLoading(false)
+
       }
 
     }
@@ -164,14 +172,14 @@ function Answer({answer}){
         <strong>
           por {student.studentId === answer.Student.id ? "Você" : answer.Student.name}
         </strong>
-      <p>{format(new Date(answer.Student.created_at), "dd/MM/yyyy 'às' HH:mm")}</p>
+      <p>{format(new Date(answer.created_at), "dd/MM/yyyy 'às' HH:mm")}</p>
       </header>
        <p>{answer.description}</p>
     </section>
   );
 }
 
-function NewQuestion({handleReload}){
+function NewQuestion({handleReload, setLoading}){
 
   const [categories, setCategories] = useState([]);
 
@@ -186,6 +194,7 @@ function NewQuestion({handleReload}){
     description: "",
     gist: "",
   });
+
 
 
   useEffect(() => {
@@ -246,6 +255,8 @@ function NewQuestion({handleReload}){
   const handleAddNewQuestion = async (e) => {
     e.preventDefault();
 
+      setLoading(true);
+
       const data = new FormData();
 
       data.append("title", newQuestion.title)
@@ -271,6 +282,7 @@ function NewQuestion({handleReload}){
           },
         });
 
+        setLoading(false)
         handleReload()
 
       } catch (error) {
@@ -288,6 +300,7 @@ function NewQuestion({handleReload}){
 
 
   return( 
+  
     <FormNewQuestion onSubmit={handleAddNewQuestion}>
       <Input id="title" label="Título" value={newQuestion.title} handler={handleInput} required/>
       <Input id="description" label="Descrição" value={newQuestion.description} handler={handleInput} required/>
@@ -325,6 +338,7 @@ function NewQuestion({handleReload}){
   
       <button>Enviar</button>
    </FormNewQuestion>
+
   );
 }
 
@@ -337,16 +351,25 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
 
   const [reload, setReload] = useState(null)
+
+  const[loading, setLoading] = useState(false);
+
   
 
   // const [answers, setAnswers] = useState([])
-
+   
   useEffect(() => {
     const loadQuestions = async () => {
+    
+      setLoading(true)
 
-      const response = await api.get("/feed")
-      setQuestions(response.data);
+        const response = await api.get("/feed")
+        setQuestions(response.data);
 
+        setLoading(false)
+
+        
+  
     }
 
     loadQuestions();
@@ -359,16 +382,25 @@ function Home() {
     history.replace("/")
   }
 
+ 
   const handleReload = () => {
-    setShowModal(false)
-    setReload(Math.random())
+
+      setShowModal(false)
+      
+      setReload(Math.random())
+
   }
+
 
   return (
   <>
+   {loading && (
+      <Loading/>
+    )}
+
     {showModal && (
        <Modal handleClose={() => setShowModal(false)} title="Faça uma pergunta">
-          <NewQuestion handleReload={handleReload}/>
+          <NewQuestion setLoading={setLoading} handleReload={handleReload}/>
        </Modal>
     )}
    
@@ -382,7 +414,8 @@ function Home() {
           <Profile />
         </ProfileContainer>
         <FeedContainer>
-          {questions.map((q) => <Question question={q}/>)}
+
+          {questions.map((q) => <Question setLoading={setLoading} question={q}/>)}
          
         </FeedContainer>
         <ActionsContainer>

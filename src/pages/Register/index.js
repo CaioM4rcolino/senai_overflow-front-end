@@ -4,6 +4,8 @@ import { Link, useHistory } from "react-router-dom";
 
 import {api} from "../../services/api"
 import { useState } from "react";
+import Loading from "../../components/loading";
+import { signIn } from "../../services/security";
 
 
 function Register() {
@@ -17,9 +19,14 @@ function Register() {
     password: "", 
     validPassword: ""
   })
+
+  const [loading, setLoading] = useState(false)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true)
+
 
     try {
 
@@ -35,16 +42,17 @@ function Register() {
         }
 
         const response = await api.post("/students", validatedRegister);
-        
-        console.log(response.data);
-        
+        setLoading(false)
+
+        signIn(response.data);
+                
         history.push("/home");
    
     } catch (error) {
 
       console.error(error);
-      console.log(register);
       alert(error.response.data.error);
+      setLoading(false)
 
     }
 
@@ -72,6 +80,10 @@ function Register() {
   }
 
   return (
+    <>
+    {loading && (
+      <Loading/>
+    )}
     <Container>
       <FormLogin onSubmit={handleSubmit}>
         <Header>
@@ -122,6 +134,7 @@ function Register() {
         </Body>
       </FormLogin>
     </Container>
+    </>
   );
 }
 
