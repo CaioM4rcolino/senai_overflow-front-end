@@ -17,25 +17,68 @@ import {
 
 import imgProfile from "../../assets/foto_perfil.png";
 import senaiLogo from  "../../assets/logo.png";
-import { signOut, getUser } from "../../services/security";
+import { signOut, getUser, setUser } from "../../services/security";
 import { useHistory } from "react-router-dom";
 import Modal from "../../components/modal";
 import Input from "../../components/input";
 import Select from "../../components/select";
 import Tag from "../../components/tag";
 import Loading from "../../components/loading";
+import { validSquaredImage } from "../../utils";
 
 
 
-function Profile() {
+function Profile({setLoading, handleReload, setMessage}) {
 
-  const student = getUser()
+  const [student, setStudent] = useState(getUser());
+
+  // useEffect(() => {
+
+  //   setStudent(getUser());
+
+  // }, [])
+
+  const handleImage = async (e) => {
+
+    if(!e.target.files[0]) return;
+
+
+
+    try {
+
+      await validSquaredImage(e.target.files[0])
+
+      const data = new FormData();
+
+      data.append("photo", e.target.files[0])
+
+      setLoading(true)
+      
+      const response = await api.post(`/students/${student.id}/photo`, data)
+
+      setTimeout(() => {
+
+        setStudent({...student, photo: response.data.photo})
+        handleReload()
+
+      }, 1000);
+
+      setUser({...student, photo: response.data.photo})
+
+
+    } catch (error) {
+      alert(error);
+      setLoading(false)
+    }
+
+  }
 
   return (
     <>
       <section>
-        <img src={imgProfile} alt=""/>
-        <a href="a">Editar Foto</a>
+        <img src={student.photo || imgProfile} alt=""/>
+        <label htmlFor="editImageProfile">Editar Foto</label>
+        <input id="editImageProfile" type="file" onChange={handleImage}/>
       </section>
       <section>
         <strong>NOME:</strong>
@@ -89,7 +132,8 @@ function Question({question, setLoading}){
           created_at: response.data.createdAt,
           Student: {
             id: student.studentId,
-            name: student.name
+            name: student.name,
+            photo: student.photo
           },
 
         }
@@ -111,7 +155,7 @@ function Question({question, setLoading}){
     return(
       <QuestionCard>
       <header>
-        <img src={imgProfile} alt=""/>
+        <img src={question.Student.photo || imgProfile} alt=""/>
         <strong>por {student.studentId === question.Student.id ? "Você" : question.Student.name}</strong>
         <p>em {format(new Date(question.createdAt), "dd/MM/yyyy 'às' HH:mm")}</p>
       </header>
@@ -168,7 +212,7 @@ function Answer({answer}){
 
     <section>
       <header>
-        <img src={imgProfile} alt=""/>
+        <img src={answer.Student.photo || imgProfile} alt=""/>
         <strong>
           por {student.studentId === answer.Student.id ? "Você" : answer.Student.name}
         </strong>
@@ -411,7 +455,7 @@ function Home() {
       </Header>
       <Content>
         <ProfileContainer>
-          <Profile />
+          <Profile handleReload={handleReload} setLoading={setLoading} />
         </ProfileContainer>
         <FeedContainer>
 

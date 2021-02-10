@@ -70,6 +70,21 @@ export const ProfileContainer = styled.div`
     width: 35%;
     border-radius: 50%;
   }
+
+  input[type="file"]{
+    display: none;
+  }
+
+  label{
+    cursor: pointer;
+    text-decoration: underline;
+    transition: .2s;
+
+      :hover{
+        color: var(--primary);
+      }
+  }
+
 `;
 
 export const FeedContainer = styled.div`
