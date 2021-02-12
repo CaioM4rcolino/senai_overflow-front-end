@@ -12,7 +12,9 @@ import {
   QuestionCard,
   Logo,
   IconSignOut,
-  FormNewQuestion
+  FormNewQuestion,
+  GitIcon,
+  ContainerGist
 } from "./styles";
 
 import imgProfile from "../../assets/foto_perfil.png";
@@ -25,7 +27,7 @@ import Select from "../../components/select";
 import Tag from "../../components/tag";
 import Loading from "../../components/loading";
 import { validSquaredImage } from "../../utils";
-
+import ReactEmbedGist from "react-embed-gist";
 
 
 function Profile({setLoading, handleReload, setMessage}) {
@@ -96,7 +98,7 @@ function Profile({setLoading, handleReload, setMessage}) {
   );
 }
 
-function Question({question, setLoading}){
+function Question({question, setLoading, setCurrentGist}){
 
 
   const [newAnswer, setNewAnswer] = useState();
@@ -158,6 +160,7 @@ function Question({question, setLoading}){
         <img src={question.Student.photo || imgProfile} alt=""/>
         <strong>por {student.studentId === question.Student.id ? "Você" : question.Student.name}</strong>
         <p>em {format(new Date(question.createdAt), "dd/MM/yyyy 'às' HH:mm")}</p>
+        {question.gist && <GitIcon onClick={() => {setCurrentGist(question.gist)}}/>}
       </header>
       <section>
     <strong>{question.title}</strong>
@@ -386,6 +389,33 @@ function NewQuestion({handleReload, setLoading}){
   );
 }
 
+function Gist( {gist, setCurrentGist} ){
+
+
+  if(gist){
+    const formattedGist = gist.split(".com/").pop()
+    return(
+
+      
+
+      <Modal title="Gist snippet" handleClose={() => {setCurrentGist(undefined)}}>
+
+        <ContainerGist>
+
+          <ReactEmbedGist  gist={formattedGist}/>
+
+        </ContainerGist>
+
+      </Modal>
+
+
+    );
+  }
+  else {
+    return null;
+  }
+}
+
 function Home() {
 
   const history = useHistory();
@@ -397,6 +427,8 @@ function Home() {
   const [reload, setReload] = useState(null)
 
   const[loading, setLoading] = useState(false);
+
+  const [currentGist, setCurrentGist] = useState(undefined)
 
   
 
@@ -442,6 +474,14 @@ function Home() {
       <Loading/>
     )}
 
+    {currentGist && (
+
+      <Gist gist={currentGist} setCurrentGist={setCurrentGist}/>
+
+    )}
+     
+   
+
     {showModal && (
        <Modal handleClose={() => setShowModal(false)} title="Faça uma pergunta">
           <NewQuestion setLoading={setLoading} handleReload={handleReload}/>
@@ -459,7 +499,7 @@ function Home() {
         </ProfileContainer>
         <FeedContainer>
 
-          {questions.map((q) => <Question setLoading={setLoading} question={q}/>)}
+          {questions.map((q) => <Question setLoading={setLoading} question={q} setCurrentGist={setCurrentGist}/>)}
          
         </FeedContainer>
         <ActionsContainer>
