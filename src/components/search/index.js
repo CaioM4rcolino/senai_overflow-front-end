@@ -1,10 +1,10 @@
 import "./styles";
-import { Container, SearchBar } from "./styles";
+import { Container } from "./styles";
 
 function Search() {
   return (
     <Container>
-      <input placeholder="Digite sua busca"></input>
+      <input placeholder="Pesquisar no SenaiOverflow"></input>
       <button>Buscar</button>
     </Container>
   );

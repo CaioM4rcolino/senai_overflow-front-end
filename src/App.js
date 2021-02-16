@@ -5,13 +5,12 @@ import { GlobalStyles } from "./GlobalStyles";
 import Router from "./router";
 
 function App() {
-
   //const route = window.location.href.split("/").pop();
 
   return (
     <>
-      <GlobalStyles/>
-      <Router/>
+      <GlobalStyles />
+      <Router />
     </>
   );
 }
