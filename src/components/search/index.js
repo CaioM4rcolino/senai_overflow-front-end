@@ -1,11 +1,11 @@
 import "./styles";
 import { Container } from "./styles";
 
-function Search() {
+function Search({onChange, onClick}) {
   return (
     <Container>
-      <input placeholder="Pesquisar no SenaiOverflow"></input>
-      <button>Buscar</button>
+        <input onChange={onChange}  placeholder="Pesquisar no SenaiOverflow"></input>
+        <button onClick={onClick}>Buscar</button>
     </Container>
   );
 }

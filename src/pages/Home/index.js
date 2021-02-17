@@ -29,6 +29,8 @@ import Loading from "../../components/loading";
 import { validSquaredImage } from "../../utils";
 import ReactEmbedGist from "react-embed-gist";
 import Search from "../../components/search";
+import axios from "axios";
+import Alert from "../../components/alert";
 
 function Profile({ setLoading, handleReload, setMessage }) {
   const [student, setStudent] = useState(getUser());
@@ -402,6 +404,12 @@ function Home() {
 
   const [currentGist, setCurrentGist] = useState(undefined);
 
+  const [keyword, setKeyword] = useState("");
+
+  const [offSet, setOffset] = useState(2);
+
+  const [message, setMessage] = useState();
+
   // const [answers, setAnswers] = useState([])
 
   useEffect(() => {
@@ -428,10 +436,61 @@ function Home() {
     setReload(Math.random());
   };
 
+  const handleSearch = async (e) => {
+
+    try {
+    
+      setKeyword(e.target.value)
+  
+      const response = await api.get(`/search/?keyword=${keyword}`);
+
+      setQuestions(response.data)
+
+
+    } catch (error) {
+      setMessage({title: "Oopsie...", description: error.response.data.error})
+    }
+
+  }
+
+  const handlePagination = async () => {
+
+    try {
+      
+      setLoading(true)
+      setOffset(offSet + 1)
+
+      const response = await api.get(`/feed/${offSet}`)
+
+      console.log(response.data)
+      setQuestions([...questions, ...response.data]);
+
+      setLoading(false)
+
+    } catch (error) {
+      setMessage({title: "Oopsie...", description: error.response.data.error})
+      setLoading(false)
+    }
+
+  }
+
+  const scrollObserver = (e) => {
+    const {scrollTop, clientHeight, scrollHeight} = e.target;
+
+  //  console.log(scrollTop, clientHeight, scrollHeight);
+
+    if(scrollHeight - scrollTop === clientHeight){
+      
+      return handlePagination()
+
+    }
+
+  }
+
   return (
     <>
+      <Alert message={message} type="error" handleClose={setMessage}/>
       {loading && <Loading />}
-
       {currentGist && (
         <Gist gist={currentGist} setCurrentGist={setCurrentGist} />
       )}
@@ -448,14 +507,14 @@ function Home() {
       <Container>
         <Header>
           {<Logo onClick={handleReload} src={senaiLogo} />}
-          <Search />
+          <Search onChange={handleSearch}/>
           <IconSignOut onClick={handleSignOut} />
         </Header>
         <Content>
           <ProfileContainer>
             <Profile handleReload={handleReload} setLoading={setLoading} />
           </ProfileContainer>
-          <FeedContainer>
+          <FeedContainer onScroll={scrollObserver}>
             {questions.map((q) => (
               <Question
                 setLoading={setLoading}
@@ -474,5 +533,7 @@ function Home() {
     </>
   );
 }
+
+
 
 export default Home;
