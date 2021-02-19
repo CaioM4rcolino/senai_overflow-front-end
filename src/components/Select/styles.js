@@ -11,4 +11,7 @@ export const Container = styled.div`
     font-size: 14px;
     margin-bottom: 2px;
   }
+
+  > select {
+  }
 `;

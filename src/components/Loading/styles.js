@@ -1,10 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
 const spin = keyframes`
-  0%{
-
-  }
-
   100%{
     transform: rotate(360deg);
   }
@@ -22,13 +18,16 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   user-select: none;
 
   > img {
     width: 100px;
     height: 100px;
-    margin-bottom: 10px;
     border-radius: 50%;
+    opacity: 0.8;
+    margin-bottom: 10px;
+    border: 2px solid var(--dark);
 
     animation: ${spin} 1s linear infinite;
   }

@@ -5,6 +5,7 @@ import bgImg from "../../assets/bg.jpg";
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,17 +14,18 @@ export const Container = styled.div`
     content: "";
 
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
 
     background-image: url(${bgImg});
-
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center-top;
+    background-position: center top;
+
     filter: blur(4px);
+
     z-index: -1;
   }
 `;
@@ -48,15 +50,15 @@ export const FormLogin = styled.form`
   min-width: 300px;
   max-width: 500px;
 
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  text-align: center;
   background-color: #282a36cc;
   border-radius: 4px;
+  text-align: center;
 
   box-shadow: 0px 0px 10px black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: hidden;
 `;
 
@@ -64,8 +66,10 @@ export const Header = styled.header`
   width: 100%;
   padding: 20px;
   border-radius: 4px 4px 0px 0px;
-  box-shadow: 0px 2px 4px black;
+
   background-color: var(--dark);
+  box-shadow: 0px 2px 4px black;
+
   > h1 {
     font-size: 24px;
     text-align: center;
@@ -82,6 +86,7 @@ export const Body = styled.section`
   width: 100%;
   padding: 30px;
   padding-top: 10px;
+
   display: flex;
   flex-direction: column;
   gap: 10px;

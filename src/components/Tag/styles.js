@@ -5,6 +5,7 @@ export const Container = styled.article`
   padding: 2px 10px;
   display: flex;
   align-items: center;
+
   border-radius: 4px;
   background-color: var(--darkGray);
 
@@ -12,9 +13,8 @@ export const Container = styled.article`
 
   > span {
     margin-left: 10px;
-    font-size: 20px;
     cursor: pointer;
-    transition: 0.2s;
+    font-size: 20px;
 
     :hover {
       color: var(--primary);

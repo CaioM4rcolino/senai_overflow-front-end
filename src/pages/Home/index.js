@@ -1,46 +1,77 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+<<<<<<< HEAD
 import { format, set } from "date-fns";
 import ReactEmbedGist from "react-embed-gist";
 
+=======
+import { format } from "date-fns";
+import ReactEmbedGist from "react-embed-gist";
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 import {
-  ActionsContainer,
   Container,
-  Content,
-  FeedContainer,
   Header,
+<<<<<<< HEAD
   IconSignOut,
   Logo,
+=======
+  Content,
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   ProfileContainer,
+  FeedContainer,
+  ActionsContainer,
   QuestionCard,
+<<<<<<< HEAD
   AnswersCard,
+=======
+  Logo,
+  IconSignOut,
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   FormNewQuestion,
   GistIcon,
   ContainerGist,
 } from "./styles";
 
+import Input from "../../components/Input";
 import imgProfile from "../../assets/foto_perfil.png";
 import logo from "../../assets/logo.png";
 import { api } from "../../services/api";
 import { getUser, setUser, signOut } from "../../services/security";
 import Modal from "../../components/Modal";
+<<<<<<< HEAD
 import Input from "../../components/input/index";
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 import Select from "../../components/Select";
 import Tag from "../../components/Tag";
 import Loading from "../../components/Loading";
 import { validSquaredImage } from "../../utils";
+<<<<<<< HEAD
 import SpinnerLoading from "../../components/SpinnerLoading";
 import InputSearch from "../../components/InputSearch";
+=======
+import {
+  FaGithub,
+  FaGithubAlt,
+  FaGithubSquare,
+  FaReacteurope,
+} from "react-icons/fa";
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 
 function Profile({ setIsLoading, handleReload, setMessage }) {
   const [student, setStudent] = useState(getUser());
 
+<<<<<<< HEAD
   // useEffect(() => {
   //   setStudent(getUser());
   // }, []);
 
   const handleImage = async (e) => {
     if (!e.target.files) return;
+=======
+  const handleImage = async (e) => {
+    if (!e.target.files[0]) return;
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 
     try {
       await validSquaredImage(e.target.files[0]);
@@ -61,7 +92,10 @@ function Profile({ setIsLoading, handleReload, setMessage }) {
       setUser({ ...student, image: response.data.image });
     } catch (error) {
       alert(error);
+<<<<<<< HEAD
       console.error(error);
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
       setIsLoading(false);
     }
   };
@@ -69,17 +103,25 @@ function Profile({ setIsLoading, handleReload, setMessage }) {
   return (
     <>
       <section>
+<<<<<<< HEAD
         <img
           src={student.image || imgProfile}
           alt="Imagem de perfil"
           title="Foto de Perfil"
         />
+=======
+        <img src={student.image || imgProfile} alt="Imagem de Perfil" />
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
         <label htmlFor="editImageProfile">Editar Foto</label>
         <input id="editImageProfile" type="file" onChange={handleImage} />
       </section>
       <section>
         <strong>NOME:</strong>
+<<<<<<< HEAD
         <p>{student.Name}</p>
+=======
+        <p>{student.name}</p>
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
       </section>
       <section>
         <strong>RA:</strong>
@@ -93,6 +135,7 @@ function Profile({ setIsLoading, handleReload, setMessage }) {
   );
 }
 
+<<<<<<< HEAD
 function Question({ question, setIsLoading, setCurrentGist }) {
   const [newAnswer, setNewAnswer] = useState("");
   const [showAnswers, setShowAnswers] = useState(false);
@@ -101,11 +144,40 @@ function Question({ question, setIsLoading, setCurrentGist }) {
   // const handleInput = (e) => {
   //   setAnswer(e.target.value);
   // };
+=======
+function Answer({ answer }) {
+  const student = getUser();
+
+  return (
+    <section>
+      <header>
+        <img src={answer.Student.image || imgProfile} alt="Imagem de Perfil" />
+        <strong>
+          por{" "}
+          {student.studentId === answer.Student.id
+            ? "Você"
+            : answer.Student.name}
+        </strong>
+        <p> {format(new Date(answer.created_at), "dd/MM/yyyy 'às' HH:mm")}</p>
+      </header>
+      <p>{answer.description}</p>
+    </section>
+  );
+}
+
+function Question({ question, setIsLoading, setCurrentGist }) {
+  const [showAnswers, setShowAnswers] = useState(false);
+
+  const [newAnswer, setNewAnswer] = useState("");
+
+  const [answers, setAnswers] = useState([]);
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 
   useEffect(() => {
     setAnswers(question.Answers);
   }, [question.Answers]);
 
+<<<<<<< HEAD
   const qtdAnwers = answers.length;
 
   const handleAddAnswer = async (e) => {
@@ -114,6 +186,17 @@ function Question({ question, setIsLoading, setCurrentGist }) {
 
     if (newAnswer < 10)
       return alert("A resposta precisa ter no mínimo 10 caracteres");
+=======
+  const qtdAnswers = answers.length;
+
+  const handleAddAnswer = async (e) => {
+    e.preventDefault();
+
+    if (newAnswer.length < 10)
+      return alert("A resposta deve ter no mínimo 10 caracteres");
+
+    setIsLoading(true);
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 
     try {
       const response = await api.post(`/questions/${question.id}/answers`, {
@@ -136,14 +219,20 @@ function Question({ question, setIsLoading, setCurrentGist }) {
       setAnswers([...answers, answerAdded]);
 
       setNewAnswer("");
+<<<<<<< HEAD
       setIsLoading(false);
       // console.log(response);
+=======
+
+      setIsLoading(false);
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
     } catch (error) {
       alert(error);
       setIsLoading(false);
     }
   };
 
+<<<<<<< HEAD
   // const showAnswers = () => {
   //   if (show === true) {
   //     // const container = question.Answers.map((a) => <Answer answer={a} />);
@@ -157,6 +246,8 @@ function Question({ question, setIsLoading, setCurrentGist }) {
   //   // alert(show);
   // };
 
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   const student = getUser();
 
   return (
@@ -173,7 +264,11 @@ function Question({ question, setIsLoading, setCurrentGist }) {
             : question.Student.name}
         </strong>
         <p>
+<<<<<<< HEAD
           em {format(new Date(question.created_at), "dd/MM/yyyy 'as' HH:mm")}
+=======
+          em {format(new Date(question.created_at), "dd/MM/yyyy 'às' HH:mm")}
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
         </p>
         {question.gist && (
           <GistIcon onClick={() => setCurrentGist(question.gist)} />
@@ -182,6 +277,7 @@ function Question({ question, setIsLoading, setCurrentGist }) {
       <section>
         <strong>{question.title}</strong>
         <p>{question.description}</p>
+<<<<<<< HEAD
         {question.image ? (
           <img src={question.image} alt="Imagem da pergunta" />
         ) : (
@@ -196,11 +292,24 @@ function Question({ question, setIsLoading, setCurrentGist }) {
             <>
               {qtdAnwers}
               {qtdAnwers > 1 ? " Respostas" : " Resposta"}
+=======
+        {question.image && <img src={question.image} alt="Imagem da questão" />}
+      </section>
+      <footer>
+        <h1 onClick={() => setShowAnswers(!showAnswers)}>
+          {qtdAnswers === 0 ? (
+            "Seja o primeiro a responder"
+          ) : (
+            <>
+              {qtdAnswers}
+              {qtdAnswers > 1 ? " Respostas" : " Resposta"}
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
             </>
           )}
         </h1>
         {showAnswers && (
           <>
+<<<<<<< HEAD
             {answers.map((a) => (
               <Answer key={answers.id} answer={a} />
             ))}
@@ -227,11 +336,29 @@ function Question({ question, setIsLoading, setCurrentGist }) {
             </form>
           </>
         )}
+=======
+            {answers.map((answer) => (
+              <Answer answer={answer} />
+            ))}
+          </>
+        )}
+        <form onSubmit={handleAddAnswer}>
+          <textarea
+            minLength={10}
+            placeholder="Responda essa dúvida!"
+            onChange={(e) => setNewAnswer(e.target.value)}
+            required
+            value={newAnswer}
+          />
+          <button>Enviar</button>
+        </form>
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
       </footer>
     </QuestionCard>
   );
 }
 
+<<<<<<< HEAD
 function Answer({ answer }) {
   const student = getUser();
 
@@ -252,6 +379,8 @@ function Answer({ answer }) {
   );
 }
 
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 function NewQuestion({ handleReload, setIsLoading }) {
   const [newQuestion, setNewQuestion] = useState({
     title: "",
@@ -312,6 +441,7 @@ function NewQuestion({ handleReload, setIsLoading }) {
 
     const { options } = categoriesRef.current;
 
+<<<<<<< HEAD
     for (let index = 0; index < options.length; index++) {
       if (options[index].value === idUnsel.toString())
         options[index].disabled = false;
@@ -321,6 +451,19 @@ function NewQuestion({ handleReload, setIsLoading }) {
   const handleAddNewQuestion = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+=======
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].value === idUnsel.toString()) options[i].disabled = false;
+    }
+  };
+
+  const handleInput = (e) => {
+    setNewQuestion({ ...newQuestion, [e.target.id]: e.target.value });
+  };
+
+  const handleAddNewQuestion = async (e) => {
+    e.preventDefault();
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 
     const data = new FormData();
 
@@ -342,23 +485,37 @@ function NewQuestion({ handleReload, setIsLoading }) {
           "Content-type": "multipart/form-data",
         },
       });
+<<<<<<< HEAD
       handleReload();
     } catch (error) {
       alert(error);
       console.error(error);
+=======
+
+      handleReload();
+    } catch (error) {
+      alert(error);
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
       setIsLoading(false);
     }
   };
 
+<<<<<<< HEAD
   const handleInput = (e) => {
     setNewQuestion({ ...newQuestion, [e.target.id]: e.target.value });
   };
 
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   return (
     <FormNewQuestion onSubmit={handleAddNewQuestion}>
       <Input
         id="title"
+<<<<<<< HEAD
         label="Titulo"
+=======
+        label="Título"
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
         value={newQuestion.title}
         handler={handleInput}
         required
@@ -424,24 +581,36 @@ function Gist({ gist, handleClose }) {
 function Home() {
   const history = useHistory();
 
+<<<<<<< HEAD
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
 
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   const [questions, setQuestions] = useState([]);
 
   const [reload, setReload] = useState(null);
 
+<<<<<<< HEAD
+=======
+  const [isLoading, setIsLoading] = useState(false);
+
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   const [showNewQuestion, setShowNewQuestion] = useState(false);
 
   const [currentGist, setCurrentGist] = useState(undefined);
 
+<<<<<<< HEAD
   const [search, setSearch] = useState("");
 
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   const [page, setPage] = useState(1);
 
   const [totalQuestions, setTotalQuestions] = useState(0);
 
+<<<<<<< HEAD
   const loadQuestions = async () => {
     //Se já estiver buscando, não busca de novo
     if (isLoadingFeed) return;
@@ -450,6 +619,19 @@ function Home() {
     if (totalQuestions > 0 && totalQuestions == questions.length) return;
 
     setIsLoadingFeed(true);
+=======
+  const feedRef = useRef();
+
+  const loadQuestions = async (reload) => {
+    //se já tiver buscando, não busca de novo
+    if (isLoading) return;
+
+    //se tiver chego no fim, não busca de novo
+    if (totalQuestions > 0 && totalQuestions == questions.length) return;
+
+    setIsLoading(true);
+
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
     const response = await api.get("/feed", {
       params: { page },
     });
@@ -460,11 +642,21 @@ function Home() {
 
     setTotalQuestions(response.headers["x-total-count"]);
 
+<<<<<<< HEAD
     setIsLoadingFeed(false);
   };
 
   useEffect(() => {
     loadQuestions();
+=======
+    console.log(totalQuestions);
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadQuestions(true);
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   }, [reload]);
 
   const handleSignOut = () => {
@@ -475,6 +667,7 @@ function Home() {
 
   const handleReload = () => {
     setShowNewQuestion(false);
+<<<<<<< HEAD
     setIsLoading(false);
     setPage(1);
     setQuestions([]);
@@ -508,6 +701,13 @@ function Home() {
     }
   };
 
+=======
+    setPage(1);
+    setQuestions([]);
+    setReload(Math.random());
+  };
+
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   return (
     <>
       {isLoading && <Loading />}
@@ -522,19 +722,27 @@ function Home() {
           <NewQuestion
             handleReload={handleReload}
             setIsLoading={setIsLoading}
+<<<<<<< HEAD
           ></NewQuestion>
+=======
+          />
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
         </Modal>
       )}
       <Container>
         <Header>
           <Logo src={logo} onClick={handleReload} />
+<<<<<<< HEAD
           <InputSearch handler={handleSearch} value={search} />
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
           <IconSignOut onClick={handleSignOut} />
         </Header>
         <Content>
           <ProfileContainer>
             <Profile handleReload={handleReload} setIsLoading={setIsLoading} />
           </ProfileContainer>
+<<<<<<< HEAD
           <FeedContainer onScroll={feedScrollObserver}>
             {questions.length === 0 &&
               search.length > 3 &&
@@ -542,16 +750,25 @@ function Home() {
             {questions.map((q) => (
               <Question
                 key={q.id}
+=======
+          <FeedContainer ref={feedRef}>
+            {questions.map((q) => (
+              <Question
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
                 question={q}
                 setIsLoading={setIsLoading}
                 setCurrentGist={setCurrentGist}
               />
             ))}
+<<<<<<< HEAD
             {isLoadingFeed && <SpinnerLoading />}
             {totalQuestions > 0 &&
               totalQuestions == questions.length &&
               "Isso é tudo"}
             {/* <button onClick={loadQuestions}>Ver Mais</button> */}
+=======
+            <button onClick={loadQuestions}>Ver Mais</button>
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
           </FeedContainer>
           <ActionsContainer>
             <button onClick={() => setShowNewQuestion(true)}>

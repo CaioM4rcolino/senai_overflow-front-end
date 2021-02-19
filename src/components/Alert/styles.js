@@ -13,7 +13,7 @@ export const Container = styled.div`
 
   border-radius: 4px;
   background-color: ${(props) =>
-    props.type === "error" ? "#D90425" : "#04d925"};
+    props.type === "error" ? "#d90429aa" : "#04d929aa"};
 
   white-space: nowrap;
   overflow: hidden;

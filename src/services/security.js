@@ -6,7 +6,11 @@ const USER_KEY = "@user";
 export const signIn = (user) => {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 
+<<<<<<< HEAD
   //Setando o token como padrão em todas as requisições
+=======
+  //setando o token como padrão em todas as requisições
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
   api.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
 };
 
@@ -34,14 +38,29 @@ export const isSignedIn = () => {
   const user = JSON.parse(localStorage.getItem(USER_KEY));
 
   if (user && user.token) {
+<<<<<<< HEAD
     //verificar se o token é válido
+=======
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
     const jwtDecoded = jwtDecode(user.token);
 
     const nowTime = (Date.now() / 1000) | 0;
 
+<<<<<<< HEAD
     if (jwtDecoded.exp < nowTime) return signOut();
 
     api.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
     return true;
   } else return false;
+=======
+    if (jwtDecoded.exp < nowTime) {
+      return signOut();
+    }
+
+    api.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
+    return true;
+  }
+
+  return false;
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 };

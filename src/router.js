@@ -1,4 +1,8 @@
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+<<<<<<< HEAD
+=======
+
+>>>>>>> ce290753520ecda0aa732162168fe4563dab1d18
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
